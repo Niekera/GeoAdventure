@@ -1,0 +1,273 @@
+
+<html>
+    <head>
+        <title>GeoAdventure</title>
+        <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/235/235861.png">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+        crossorigin=""/>
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>   
+    </head>
+    <body>
+        <div  class="navbar">
+            <div class="logo">
+                <a class="main" href="{% url 'main_page' %}">GA</a>
+            </div>
+            <div id="search" class="search">Знайти себе</div>
+            <div  id="random" class="random">Випадкове місце </div>
+            <div class="profile">
+                <div class="head"></div>
+                <div  class="body"></div>
+            
+            </div>
+            
+        </div>
+       
+        <div  id="close" class="right-window">
+            <img id="title-img" class="title-img" alt="" src="">
+            <div  id="title1" class="title1">Ви ще не обрали місце</div>
+            <div  id="text1" class="text1"></div>
+        </div>
+        <div  id="num" class="num">{{num1}}</div>
+        <div id="map"></div>
+    </body>
+    
+
+    </html>
+    <style>
+        
+        #map 
+        { 
+  
+            top:83px;
+          
+            height: 100%; 
+            width:100%;
+        }
+        .navbar{
+            display:flex;
+            justify-content:space-between;
+            top:0px;
+            width:100%;
+            height:86px;
+            background:#222222;
+            
+            position:absolute;
+          
+            
+        }
+        body{
+            display:flex;
+            justify-content:center;
+            overflow:hidden;
+            margin:0;
+           
+    
+        }
+        .title1{
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            color:white;
+            font-family:Arial;
+            font-size:30px;
+            margin-top:-90px;
+           
+            width:400px;
+            height:50px;
+            box-shadow:inset 10px 10px 100px black;
+            border-radius:10px;
+        }
+        .text1{
+            display:flex;
+            jusitify-content:center;
+            width:400px;
+
+            height:300px;
+            color:white;
+            
+            font-family:Arial;
+            align-self:flex-end;
+
+        }
+        img{
+           
+            width:440px;
+            height:0px;
+          
+            
+        }
+        .right-window{
+            display:flex;
+            justify-content:center;
+            align-items:flex-start;
+            flex-wrap:wrap;
+            
+            width:430px;
+            height:700px;
+            
+            background:white;
+            
+            z-index:5;
+            margin-top:82px;
+            background:#222222;
+          
+        }
+
+        .logo{
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            width:200px;
+            height:84px;
+           
+            cursor:pointer;
+            background:#222222;
+           
+            color:white;
+            font-size:40px;
+            font-family: Arial;
+        }
+        .logo:hover{
+            background:#232b30;
+        }
+        
+        .profile{
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            width:100px;
+            height:80px;
+            overflow:hidden;
+            flex-direction:column;
+            cursor:pointer;
+            background:#222222;
+            
+            color:black;
+           
+            font-size:40px;
+            font-family: Arial;
+        }
+
+        .random{
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            background:#222222;
+            width:250px;
+            height:84px;
+            font-family: Arial;
+            
+            cursor:pointer;
+         
+           
+            font-size:30px;
+            
+            top:0px;
+            color:white;
+        }
+        .head{
+            width:30px;
+            height:30px;
+            background:white;
+            border-radius:100%;
+        }
+        .random:hover{
+            background:#232b30;
+        }
+        .body{
+            width:50px;
+          
+            position:absolute;
+            top:60px;
+            height:20px;
+            background:white;
+            
+            border-radius:20px 20px 0px 0px;
+        }
+        .main{
+            text-decoration: none;
+            color:white;
+        }
+     
+        .search{
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            width:200px;
+            height:80px;
+            overflow:hidden;
+            flex-direction:column;
+            cursor:pointer;
+            background:#222222;
+          
+            color:white;
+           
+            font-size:30px;
+            font-family: Arial;
+        }
+        .search:hover{
+            background:#232b30;
+        }
+        .profile:hover{
+            background:#232b30;
+        }
+    </style>
+   
+    <script>
+        var map = L.map('map').setView([50.61644052979312, 26.250274750834503], 13);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+        var marker = L.marker([50.61644052979312, 26.250274750834503]).addTo(map);
+        marker.bindPopup("<b>Місто Рівне").openPopup();
+            function onMapClick(e) {
+                marker.bindPopup("Координати: "+e.latlng.toString()).openPopup();
+        
+                
+            }
+            map.on('contextmenu', onMapClick);
+            function start(){
+                navigator.geolocation.watchPosition(succes,error)
+            }
+           
+            function succes(pos){
+                const lat = pos.coords.latitude
+                const lng = pos.coords.longitude
+                const accuracy = pos.coords.accuracy
+
+                let marker2 = L.marker([lat,lng]).addTo(map)
+                let circle = L.circle([lat,lng],{radius: accuracy}).addTo(map)
+                map.fitBounds(circle.getBounds())
+            }
+            function error(err){
+                if(err.code === 1){
+                    alert("Ви відмовили у доступі до геоданних")
+                }
+                else{
+                    alert("Неможливо визначити геолокацію")
+                }
+            }
+            
+            document.getElementById("search").addEventListener("click",start)
+            var random_num = document.getElementById("random")
+           
+            random_num.addEventListener("click",function random(){
+                var places_arr = ['50.6160106563252,26.259771811039705,Парк Тараса Шевченка,https://my.rv.ua/wp-content/uploads/2018/04/00_00.jpg,Сучасний парк представляє собою прямокутну ділянку якою проходять дві головні перпендикулярні алеї і ще кілька діагональних. По периметру його оточує обхідна кільцева дорога. Парк Шевченка непогано облагороджено – тут встановлено лавочки є дитячий майданчик і невеликий фонтанчик.','50.620329873993185, 26.25161130041717,Кінопалац,https://ogo.ua/images/articles/1567/1393359550.jpg,Рівненський кінотеатр','50.618862283665564, 26.248571758726783,Злата Плаза,https://business.diia.gov.ua/uploads/3/17854-2.jpg,Великий простий торговельний центр із місцевими бутиками та світовими брендам а також затишними кафе.','50.61680766730384, 26.245731928219904,Лебединка,https://tamtour.com.ua/local/image/707/007/.jpg,Парк в Рівному названий в честь лебедів які плавають в тутешньому ставку']
+                var arr = places_arr[Math.floor(Math.random()*places_arr.length)].split(',')
+                var text1 = document.getElementById("text1")
+                text1.innerText = arr[4]
+                var title1 = document.getElementById("title1")
+                title1.innerText = arr[2]
+                var img1 = document.getElementById("title-img")
+                img1.src = arr[3]
+                img1.style.height = "300px";
+                var marker12 = L.marker([+(arr[0]),+(arr[1])]).addTo(map)
+
+                map.setView([+(arr[0]),+(arr[1])], 18);
+            })
+    </script>
+
